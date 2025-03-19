@@ -1,8 +1,8 @@
 'use client';
 
-import {useEffect, useState} from 'react';
-import {meet, MeetSidePanelClient,} from '@googleworkspace/meet-addons/meet.addons';
-import {CLOUD_PROJECT_NUMBER, MAIN_STAGE_URL} from "@/constants";
+// import {useEffect, useState} from 'react';
+// import {meet, MeetSidePanelClient,} from '@googleworkspace/meet-addons/meet.addons';
+// import {CLOUD_PROJECT_NUMBER, MAIN_STAGE_URL} from "@/constants";
 
 export default function Page() {
     // const [sidePanelClient, setSidePanelClient] = useState<MeetSidePanelClient>();
