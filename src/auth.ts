@@ -12,9 +12,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   session: { strategy: "jwt" },
   callbacks: {
-    authorized({ auth }) {
-      return !!auth;
-    },
+    // authorized({ auth }) {
+    //   return !!auth;
+    // },
 
     async jwt({ token, account }) {
       console.log("token", token);
