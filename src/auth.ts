@@ -7,7 +7,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   providers: [
     Google({
-      authorization: { params: { access_type: "offline", prompt: "consent" } },
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
   ],
   session: { strategy: "jwt" },
