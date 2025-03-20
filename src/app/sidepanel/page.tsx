@@ -22,8 +22,6 @@ export default function Page() {
      */
     useEffect(() => {
         (async () => {
-            console.log(CLOUD_PROJECT_NUMBER)
-
             const session = await meet.addon.createAddonSession({
                 cloudProjectNumber: CLOUD_PROJECT_NUMBER,
             });
