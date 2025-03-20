@@ -1,10 +1,10 @@
 import { SessionProvider } from "next-auth/react";
-import ClientPage from "@/app/sidepanel/client-page";
+import Home from "@/app/sidepanel/new";
 
 export default function Page() {
   return (
     <SessionProvider>
-      <ClientPage />
+      <Home />
     </SessionProvider>
   );
 }

@@ -8,11 +8,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Google({
       authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
+        params: { prompt: "consent", access_type: "offline" },
       },
     }),
   ],
@@ -21,7 +17,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // authorized({ auth }) {
     //   return !!auth;
     // },
-
     async jwt({ token, account }) {
       console.log("token", token);
 
@@ -76,7 +71,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
     },
     async session({ session, token }) {
-      if (token?.accessToken) session.accessToken = token.access_token;
+      console.log("session", session, token);
+
+      if (token?.access_token) session.accessToken = token.access_token;
 
       session.error = token.error;
 
