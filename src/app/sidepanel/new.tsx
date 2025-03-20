@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { signOut, useSession } from "next-auth/react";
 
@@ -38,27 +38,25 @@ export default function Home() {
       <div>
         <h2> Welcome {session.user?.email} 😀</h2>
 
-        <pre>
-          {JSON.stringify(session, null, 2)}
-        </pre>
+        <pre>{JSON.stringify(session, null, 2)}</pre>
 
         <button onClick={() => signOut()}>Sign out</button>
       </div>
     );
-  } else if (status === "unauthenticated") {
-    return (
-      <div>
-        <h2>Please Login</h2>
-        <button onClick={() => popupCenter("/google-signin", "Sample Sign In")}>
-          Sign In with Google
-        </button>
-      </div>
-    );
   }
-
+  // } else if (status === "unauthenticated") {
   return (
     <div>
-      <h1>Loading...</h1>
+      <h2>Please Login</h2>
+      <button onClick={() => popupCenter("/google-signin", "Sample Sign In")}>
+        Sign In with Google
+      </button>
     </div>
   );
+
+  // return (
+  //     <div>
+  //         <h1>Loading...</h1>
+  //     </div>
+  // );
 }
