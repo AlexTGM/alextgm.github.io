@@ -68,6 +68,7 @@ export default function Home() {
 
         <pre>{JSON.stringify(session, null, 2)}</pre>
 
+        <button onClick={startActivity}>Launch Activity in Main Stage.</button>
         <button onClick={() => signOut()}>Sign out</button>
       </div>
     );
