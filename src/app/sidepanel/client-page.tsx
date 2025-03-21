@@ -6,26 +6,17 @@ import {
   MeetSidePanelClient,
 } from "@googleworkspace/meet-addons/meet.addons";
 import { CLOUD_PROJECT_NUMBER, MAIN_STAGE_URL } from "@/constants";
-import AuthButton from "@/app/components/auth";
-import {useSession} from "next-auth/react";
 
 export default function ClientPage() {
   const [sidePanelClient, setSidePanelClient] = useState<MeetSidePanelClient>();
 
-  const session = useSession()
+  const onSignIn = (response: { credential: string }) => {
+    console.log("Encoded JWT ID token:", response);
+  };
 
   useEffect(() => {
-    console.log(session)
-  }, [session]);
-
-  useEffect(() => {
-    window.addEventListener("message", (event) => {
-      if (event.data.type === "AUTH_SUCCESS") {
-        const token = event.data.token;
-        sessionStorage.setItem("meet-addon-token", token);
-        console.log("Received token:", token);
-      }
-    });
+    // Attach the onSignIn function to the global window object (required for Google Sign-In)
+    (window as unknown as Record<string, unknown>).onSignIn = onSignIn;
   }, []);
 
   // Launches the main stage when the main button is clicked.
@@ -53,9 +44,28 @@ export default function ClientPage() {
 
   return (
     <>
-      <AuthButton />
+      <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-      <div>This is the add-on Side Panel. Only you can see this.</div>
+      <div
+        id="g_id_onload"
+        data-client_id="918254786145-n465du05i4ds04e3q0oluakjmsp27usr.apps.googleusercontent.com"
+        data-context="signin"
+        data-ux_mode="popup"
+        data-callback="onSignIn"
+        data-itp_support="true"
+      ></div>
+
+      <div
+        className="g_id_signin"
+        data-type="standard"
+        data-shape="pill"
+        data-theme="filled_blue"
+        data-text="continue_with"
+        data-size="large"
+        data-logo_alignment="left"
+      ></div>
+
+      <div>This is the add-on Side Panel. Only you can see this. a button</div>
       <button onClick={startActivity}>Launch Activity in Main Stage.</button>
     </>
   );
