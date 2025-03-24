@@ -1,6 +1,6 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { CLOUD_PROJECT_NUMBER, MAIN_STAGE_URL } from "@/constants";
 import { useEffect, useState } from "react";
 import { meet, MeetSidePanelClient } from "@googleworkspace/meet-addons";
@@ -10,33 +10,33 @@ export default function Home() {
 
   const { data: session, status } = useSession();
 
-  const popupCenter = (url: string, title: string) => {
-    const dualScreenLeft = window.screenLeft ?? window.screenX;
-    const dualScreenTop = window.screenTop ?? window.screenY;
-
-    const width =
-      window.innerWidth ?? document.documentElement.clientWidth ?? screen.width;
-
-    const height =
-      window.innerHeight ??
-      document.documentElement.clientHeight ??
-      screen.height;
-
-    const systemZoom = width / window.screen.availWidth;
-
-    const left = (width - 500) / 2 / systemZoom + dualScreenLeft;
-    const top = (height - 550) / 2 / systemZoom + dualScreenTop;
-
-    const newWindow = window.open(
-      url,
-      title,
-      `width=${500 / systemZoom},height=${
-        550 / systemZoom
-      },top=${top},left=${left}`,
-    );
-
-    newWindow?.focus();
-  };
+  // const popupCenter = (url: string, title: string) => {
+  //   const dualScreenLeft = window.screenLeft ?? window.screenX;
+  //   const dualScreenTop = window.screenTop ?? window.screenY;
+  //
+  //   const width =
+  //     window.innerWidth ?? document.documentElement.clientWidth ?? screen.width;
+  //
+  //   const height =
+  //     window.innerHeight ??
+  //     document.documentElement.clientHeight ??
+  //     screen.height;
+  //
+  //   const systemZoom = width / window.screen.availWidth;
+  //
+  //   const left = (width - 500) / 2 / systemZoom + dualScreenLeft;
+  //   const top = (height - 550) / 2 / systemZoom + dualScreenTop;
+  //
+  //   const newWindow = window.open(
+  //     url,
+  //     title,
+  //     `width=${500 / systemZoom},height=${
+  //       550 / systemZoom
+  //     },top=${top},left=${left}`,
+  //   );
+  //
+  //   newWindow?.focus();
+  // };
 
   // Launches the main stage when the main button is clicked.
   async function startActivity() {
@@ -76,9 +76,7 @@ export default function Home() {
     return (
       <div>
         <h2>Please Login</h2>
-        <button onClick={() => popupCenter("/google-signin", "Sample Sign In")}>
-          Sign In with Google
-        </button>
+        <button onClick={() => signIn("google")}>Sign In</button>
       </div>
     );
   }
