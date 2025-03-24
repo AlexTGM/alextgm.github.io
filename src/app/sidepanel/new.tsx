@@ -76,7 +76,24 @@ export default function Home() {
     return (
       <div>
         <h2>Please Login</h2>
-        <button onClick={() => signIn("google")}>Sign In</button>
+        <button
+          onClick={() => {
+            const popup = window.open(
+              "/api/auth/signin",
+              "_blank",
+              "width=500,height=600",
+            );
+            const interval = setInterval(() => {
+              if (popup?.closed) {
+                clearInterval(interval);
+                // Fetch session status after popup closes
+                signIn();
+              }
+            }, 500);
+          }}
+        >
+          Sign In
+        </button>
       </div>
     );
   }
