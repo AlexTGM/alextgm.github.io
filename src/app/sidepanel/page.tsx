@@ -1,9 +1,15 @@
-'use client'
+"use client";
 
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
+import { SessionProvider } from "next-auth/react";
+import Home from "@/app/sidepanel/new";
 
-const NoSSR = dynamic(() => import("./client-page"), { ssr: false });
+// const NoSSR = dynamic(() => import("./client-page"), { ssr: false });
 
 export default function Page() {
-    return <NoSSR />;
+  return (
+    <SessionProvider>
+      <Home />
+    </SessionProvider>
+  );
 }
