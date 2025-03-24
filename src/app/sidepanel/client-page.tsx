@@ -12,6 +12,10 @@ export default function ClientPage() {
 
   const onSignIn = (response: { credential: string }) => {
     console.log("Encoded JWT ID token:", response);
+
+    fetch("https://services.reops.labs.jb.gg/drive-watch/ext/projects/sessions", {
+      headers: { "Google-Id-Token": response.credential },
+    })
   };
 
   useEffect(() => {
