@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Script from "next/script";
 import { User } from "next-auth";
+import {useSession} from "next-auth/react";
 
 export default function GoogleOneTap({ user }: { user: User | undefined }) {
   const [isGoogleScriptLoaded, setIsGoogleScriptLoaded] = useState(false);
@@ -24,11 +25,16 @@ export default function GoogleOneTap({ user }: { user: User | undefined }) {
     newWindow?.focus();
   };
 
+  const test = useSession()
+
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
       if (event.data?.status === "authenticated") {
         console.log("Message received:", event);
+
+        console.log('data', test)
+
         // window.location.reload();
       }
     };

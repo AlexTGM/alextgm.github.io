@@ -7,13 +7,14 @@ import { SessionProvider } from "next-auth/react";
 export default async function RootLayout({ children }: PropsWithChildren) {
   const session = await auth();
 
-  console.log(process.env.AUTH_GOOGLE_ID)
-
   return (
     <html lang="en">
       <body>
-        <SessionProvider>{children}</SessionProvider>
-        <GoogleOneTap user={session?.user} />
+        <SessionProvider>
+          {children}
+
+          <GoogleOneTap user={session?.user} />
+        </SessionProvider>
       </body>
     </html>
   );

@@ -9,10 +9,15 @@ const SignInPage = () => {
   const credential = searchParams.get("credential");
 
   useEffect(() => {
-    signIn("google", {
-      credential,
-      redirectTo: "/login/google/popup-callback",
-    }).catch((error) => {
+    signIn(
+      "google",
+      {
+        credential,
+        redirect: false,
+        // redirectTo: "/login/google/popup-callback",
+      },
+      {},
+    ).catch((error) => {
       console.error("Error signing in:", error);
     });
 
