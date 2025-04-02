@@ -1,23 +1,51 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { signIn } from "next-auth/react";
 import Script from "next/script";
 import { User } from "next-auth";
 
 export default function GoogleOneTap({ user }: { user: User | undefined }) {
   const [isGoogleScriptLoaded, setIsGoogleScriptLoaded] = useState(false);
 
+  const handleLogin = async (credential: string) => {
+    const url = "/login/google";
+    const title = "Sign in with Google";
+    const width = 600;
+    const height = 600;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+
+    const newWindow = window.open(
+      `${url}?credential=${credential}`,
+      title,
+      `width=${width},height=${height},top=${top},left=${left}`,
+    );
+
+    newWindow?.focus();
+  };
+
+  useEffect(() => {
+    const messageHandler = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.status === "authenticated") {
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener("message", messageHandler);
+    return () => window.removeEventListener("message", messageHandler);
+  }, []);
+
   const handleCredentialResponse = useCallback(
     (response: { credential: string }) => {
-      console.log('credential:', response)
+      handleLogin(response.credential);
 
-      signIn("google", {
-        credential: response.credential,
-        redirect: true,
-      }).catch((error) => {
-        console.error("Error signing in:", error);
-      });
+      // signIn("google", {
+      //   credential: response.credential,
+      //   redirect: true,
+      // }).catch((error) => {
+      //   console.error("Error signing in:", error);
+      // });
     },
     [],
   );
