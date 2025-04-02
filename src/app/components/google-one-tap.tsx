@@ -10,9 +10,11 @@ export default function GoogleOneTap({ user }: { user: User | undefined }) {
 
   const handleCredentialResponse = useCallback(
     (response: { credential: string }) => {
+      console.log('credential:', response)
+
       signIn("google", {
         credential: response.credential,
-        redirect: false,
+        redirect: true,
       }).catch((error) => {
         console.error("Error signing in:", error);
       });
