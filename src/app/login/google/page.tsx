@@ -13,8 +13,8 @@ const SignInPage = () => {
       "google",
       {
         credential,
-        redirect: false,
-        // redirectTo: "/login/google/popup-callback",
+        // redirect: false,
+        redirectTo: "/login/google/popup-callback",
       },
       {},
     ).catch((error) => {
@@ -22,7 +22,7 @@ const SignInPage = () => {
     });
 
     // signIn("google", { redirectTo: "/login/google/popup-callback" });
-  }, []);
+  }, [credential]);
 
   return (
     <div

@@ -9,13 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/unstorage-adapter": "^2.8.0",
     "@googleworkspace/meet-addons": "^1.2.0",
     "@types/google-one-tap": "^1.2.6",
     "google-auth-library": "^9.15.1",
     "next": "15.2.3",
     "next-auth": "5.0.0-beta.25",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "unstorage": "^1.15.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
