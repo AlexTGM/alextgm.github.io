@@ -26,11 +26,10 @@ export default function GoogleOneTap({ user }: { user: User | undefined }) {
 
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
-      console.log("Message received:", event);
-
       if (event.origin !== window.location.origin) return;
       if (event.data?.status === "authenticated") {
-        window.location.reload();
+        console.log("Message received:", event);
+        // window.location.reload();
       }
     };
 
