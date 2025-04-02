@@ -6,22 +6,25 @@ import {
   MeetSidePanelClient,
 } from "@googleworkspace/meet-addons/meet.addons";
 import { CLOUD_PROJECT_NUMBER, MAIN_STAGE_URL } from "@/constants";
+import {signOut, useSession} from "next-auth/react";
 
 export default function ClientPage() {
+  const session = useSession();
+
   const [sidePanelClient, setSidePanelClient] = useState<MeetSidePanelClient>();
 
-  const onSignIn = (response: { credential: string }) => {
-    console.log("Encoded JWT ID token:", response);
+  // const onSignIn = (response: { credential: string }) => {
+  //   console.log("Encoded JWT ID token:", response);
+  //
+  //   fetch("https://services.reops.labs.jb.gg/drive-watch/ext/projects/sessions", {
+  //     headers: { "Google-Id-Token": response.credential },
+  //   })
+  // };
 
-    fetch("https://services.reops.labs.jb.gg/drive-watch/ext/projects/sessions", {
-      headers: { "Google-Id-Token": response.credential },
-    })
-  };
-
-  useEffect(() => {
-    // Attach the onSignIn function to the global window object (required for Google Sign-In)
-    (window as unknown as Record<string, unknown>).onSignIn = onSignIn;
-  }, []);
+  // useEffect(() => {
+  //   // Attach the onSignIn function to the global window object (required for Google Sign-In)
+  //   (window as unknown as Record<string, unknown>).onSignIn = onSignIn;
+  // }, []);
 
   // Launches the main stage when the main button is clicked.
   async function startActivity() {
@@ -46,31 +49,15 @@ export default function ClientPage() {
     })();
   }, []);
 
-  return (
-    <>
-      <script src="https://accounts.google.com/gsi/client" async defer></script>
+  if (session.data) {
+    return (
+      <div>
+        You are logged in{" "}
+        <pre>{JSON.stringify(session.data.user, null, 2)}</pre>
 
-      <div
-        id="g_id_onload"
-        data-client_id="918254786145-n465du05i4ds04e3q0oluakjmsp27usr.apps.googleusercontent.com"
-        data-context="signin"
-        data-ux_mode="popup"
-        data-callback="onSignIn"
-        data-itp_support="true"
-      ></div>
-
-      <div
-        className="g_id_signin"
-        data-type="standard"
-        data-shape="pill"
-        data-theme="filled_blue"
-        data-text="continue_with"
-        data-size="large"
-        data-logo_alignment="left"
-      ></div>
-
-      <div>This is the add-on Side Panel. Only you can see this. a button</div>
-      <button onClick={startActivity}>Launch Activity in Main Stage.</button>
-    </>
-  );
+        <button onClick={startActivity}>Launch Activity in Main Stage.</button>
+        <button onClick={() => signOut()}>Sign out</button>
+      </div>
+    );
+  } else return <div>You are not logged in</div>;
 }
