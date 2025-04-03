@@ -19,13 +19,30 @@ const GoogleSignInButton = () => {
       `width=${width},height=${height},top=${top},left=${left}`,
     );
 
-    window.addEventListener("message", (event) => {
+    window.addEventListener("message", async (event) => {
       if (event.origin === process.env.NEXT_PUBLIC_GOOGLE_BASE_URL) {
         const tokens = event.data;
 
         setIsLoading(false);
 
         console.log("Received tokens:", tokens);
+
+        // Store tokens in middleware via API
+        try {
+          const response = await fetch("/api/auth/store-tokens", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ tokens }),
+          });
+
+          if (!response.ok) {
+            console.error("Failed to store tokens:", await response.text());
+          }
+        } catch (error) {
+          console.error("Error storing tokens:", error);
+        }
       }
     });
 

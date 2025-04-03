@@ -6,9 +6,13 @@ import {
   MeetSidePanelClient,
 } from "@googleworkspace/meet-addons/meet.addons";
 import { CLOUD_PROJECT_NUMBER, MAIN_STAGE_URL } from "@/constants";
+import { getSessions } from "./get-sessions";
 
 export default function ClientPage() {
   const [sidePanelClient, setSidePanelClient] = useState<MeetSidePanelClient>();
+  const [sessions, setSessions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Launches the main stage when the main button is clicked.
   async function startActivity() {
@@ -18,6 +22,21 @@ export default function ClientPage() {
     await sidePanelClient.startActivity({
       mainStageUrl: MAIN_STAGE_URL,
     });
+  }
+
+  // Fetches sessions from the API
+  async function fetchSessions() {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await getSessions();
+      setSessions(data.sessions);
+    } catch (err) {
+      console.error("Error fetching sessions:", err);
+      setError("Failed to fetch sessions. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   /**
@@ -37,6 +56,28 @@ export default function ClientPage() {
     <div>
       <h1>User Data</h1>
       <button onClick={startActivity}>Launch Activity in Main Stage.</button>
+
+      <div style={{ marginTop: '20px' }}>
+        <button 
+          onClick={fetchSessions} 
+          disabled={isLoading}
+        >
+          {isLoading ? 'Loading Sessions...' : 'Fetch Sessions'}
+        </button>
+
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
+        {sessions.length > 0 && (
+          <div style={{ marginTop: '10px' }}>
+            <h2>Sessions:</h2>
+            <ul>
+              {sessions.map((session, index) => (
+                <li key={index}>{session}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 
