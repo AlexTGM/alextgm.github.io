@@ -60,6 +60,7 @@ export default function GoogleOneTap({ user }: { user: User | undefined }) {
           ux_mode: "popup",
           auto_select: false,
           use_fedcm_for_prompt: false,
+          cancel_on_tap_outside: false
         });
 
         window.google.accounts.id.prompt((notification) => {

@@ -6,7 +6,7 @@ import {
   MeetSidePanelClient,
 } from "@googleworkspace/meet-addons/meet.addons";
 import { CLOUD_PROJECT_NUMBER, MAIN_STAGE_URL } from "@/constants";
-import {signOut, useSession} from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function ClientPage() {
   const session = useSession();
@@ -54,10 +54,15 @@ export default function ClientPage() {
       <div>
         You are logged in{" "}
         <pre>{JSON.stringify(session.data.user, null, 2)}</pre>
-
         <button onClick={startActivity}>Launch Activity in Main Stage.</button>
         <button onClick={() => signOut()}>Sign out</button>
       </div>
     );
-  } else return <div>You are not logged in</div>;
+  } else
+    return (
+      <div>
+        You are not logged in
+        <button onClick={() => window.location.reload()}>Reload page</button>
+      </div>
+    );
 }
