@@ -1,9 +1,8 @@
-'use server'
+"use server";
 
 // import { cookies } from "next/headers";
 
-import ClientPage from "@/app/sidepanel/client-page";
-import { SignOut } from "@/app/sidepanel/sign-out";
+import GoogleSignInButton from "@/app/components/google-sign-in-button";
 
 export default async function Page() {
   // const cookieStore = await cookies();
@@ -25,8 +24,10 @@ export default async function Page() {
   return (
     <div>
       {/*<pre>{JSON.stringify(response, null, 2)}</pre>*/}
-      <SignOut />
-      <ClientPage />
+      {/*<SignOut />*/}
+      {/*<ClientPage />*/}
+
+      <GoogleSignInButton />
     </div>
   );
 }
