@@ -6,8 +6,9 @@ import {
   MeetSidePanelClient,
 } from "@googleworkspace/meet-addons/meet.addons";
 import { CLOUD_PROJECT_NUMBER, MAIN_STAGE_URL } from "@/constants";
+import { getSessions } from "@/app/sidepanel/get-sessions";
 
-export default function   ClientPage() {
+export default function ClientPage() {
   const [sidePanelClient, setSidePanelClient] = useState<MeetSidePanelClient>();
 
   // Launches the main stage when the main button is clicked.
@@ -33,9 +34,22 @@ export default function   ClientPage() {
     })();
   }, []);
 
+  const [sessions, setSessions] = useState<string[] | null>(null);
+
   return (
     <div>
       <h1>User Data</h1>
+
+      <button
+        onClick={async () => {
+          setSessions((await getSessions()).sessions);
+        }}
+      >
+        Get Sessions
+      </button>
+
+      <pre>{(JSON.stringify(sessions, null, 2))}</pre>
+
       <button onClick={startActivity}>Launch Activity in Main Stage.</button>
     </div>
   );
