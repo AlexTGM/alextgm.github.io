@@ -3,6 +3,7 @@
 // import { cookies } from "next/headers";
 
 import GoogleSignInButton from "@/app/components/google-sign-in-button";
+import ClientPage from "@/app/sidepanel/client-page";
 
 export default async function Page() {
   // const cookieStore = await cookies();
@@ -25,7 +26,7 @@ export default async function Page() {
     <div>
       {/*<pre>{JSON.stringify(response, null, 2)}</pre>*/}
       {/*<SignOut />*/}
-      {/*<ClientPage />*/}
+      <ClientPage />
 
       <GoogleSignInButton />
     </div>
