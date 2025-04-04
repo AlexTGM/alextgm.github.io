@@ -57,19 +57,16 @@ export default function ClientPage() {
       <h1>User Data</h1>
       <button onClick={startActivity}>Launch Activity in Main Stage.</button>
 
-      <div style={{ marginTop: '20px' }}>
-        <button 
-          onClick={fetchSessions} 
-          disabled={isLoading}
-        >
-          {isLoading ? 'Loading Sessions...' : 'Fetch Sessions'}
+      <div style={{ marginTop: "20px" }}>
+        <button onClick={fetchSessions} disabled={isLoading}>
+          {isLoading ? "Loading Sessions..." : "Fetch Sessions"}
         </button>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
-        {sessions.length > 0 && (
-          <div style={{ marginTop: '10px' }}>
-            <h2>Sessions:</h2>
+        {sessions && (
+          <div style={{ marginTop: "10px" }}>
+            <h2>Sessions ({sessions.length}):</h2>
             <ul>
               {sessions.map((session, index) => (
                 <li key={index}>{session}</li>
