@@ -6,19 +6,19 @@ export async function middleware(request: NextRequest) {
 
   // Read tokens from cookies
   const accessToken = request.cookies.get('access_token')?.value;
-  const refreshToken = request.cookies.get('refresh_token')?.value;
+  // const refreshToken = request.cookies.get('refresh_token')?.value;
   const idToken = request.cookies.get('id_token')?.value;
 
   // Store tokens in request headers for use in server components
   if (accessToken) {
-    response.headers.set('x-access-token', accessToken);
+    // response.headers.set('x-access-token', accessToken);
     // Set X-Auth-Request-Access-Token header as requested
     response.headers.set('X-Auth-Request-Access-Token', accessToken);
   }
 
-  if (refreshToken) {
-    response.headers.set('x-refresh-token', refreshToken);
-  }
+  // if (refreshToken) {
+  //   response.headers.set('x-refresh-token', refreshToken);
+  // }
 
   // Extract email from ID token if available
   if (idToken) {

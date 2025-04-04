@@ -59,4 +59,5 @@ const GoogleSignInButton = () => {
     </button>
   );
 };
+
 export default GoogleSignInButton;
