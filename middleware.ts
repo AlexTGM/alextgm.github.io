@@ -10,11 +10,11 @@ export async function middleware(request: NextRequest) {
 
   // Fall back to cookies if headers are not available
   if (!accessToken) {
-    accessToken = request.cookies.get('access_token')?.value;
+    accessToken = request.cookies.get('access_token')?.value ?? null;
   }
 
   if (!idToken) {
-    idToken = request.cookies.get('id_token')?.value;
+    idToken = request.cookies.get('id_token')?.value ?? null;
   }
 
   // Store access token in request headers for use in server components
