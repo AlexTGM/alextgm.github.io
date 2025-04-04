@@ -10,7 +10,7 @@ import { getSessions } from "./get-sessions";
 
 export default function ClientPage() {
   const [sidePanelClient, setSidePanelClient] = useState<MeetSidePanelClient>();
-  const [sessions, setSessions] = useState<string[]>([]);
+  const [sessions, setSessions] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
