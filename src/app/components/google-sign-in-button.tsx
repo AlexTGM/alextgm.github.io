@@ -34,8 +34,11 @@ const GoogleSignInButton = ({ onSignIn }: GoogleSignInButtonProps) => {
 
         // Store tokens in localStorage instead of cookies
         try {
-          storeTokens(tokens);
-          console.log("Tokens stored in localStorage");
+
+          await fetch("/api/auth/store-tokens", {
+            method: "POST",
+            body: JSON.stringify({ tokens }),
+          })
 
           // Call the onSignIn callback if provided
           if (onSignIn) {

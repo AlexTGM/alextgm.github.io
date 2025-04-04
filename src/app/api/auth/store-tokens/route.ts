@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
         value: tokens.access_token,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "none",
         // Set expiry based on token expiry or default to 1 hour
         maxAge: tokens.expiry_date ? 
           Math.floor((tokens.expiry_date - Date.now()) / 1000) : 
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
         value: tokens.refresh_token,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "none",
         // Refresh tokens typically have a longer lifespan
         maxAge: 30 * 24 * 60 * 60 // 30 days
       });
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
         value: tokens.id_token,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "none",
         // ID tokens typically have the same expiry as access tokens
         maxAge: tokens.expiry_date ? 
           Math.floor((tokens.expiry_date - Date.now()) / 1000) : 
