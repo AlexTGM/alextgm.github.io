@@ -4,21 +4,23 @@ import { OAuth2Client } from 'google-auth-library';
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
-  // Read tokens from cookies
-  const accessToken = request.cookies.get('access_token')?.value;
-  // const refreshToken = request.cookies.get('refresh_token')?.value;
-  const idToken = request.cookies.get('id_token')?.value;
+  // Try to read tokens from headers first (for iframe environments)
+  let accessToken = request.headers.get('X-Auth-Request-Access-Token');
+  let idToken = request.headers.get('X-Auth-Request-ID-Token');
 
-  // Store tokens in request headers for use in server components
-  if (accessToken) {
-    // response.headers.set('x-access-token', accessToken);
-    // Set X-Auth-Request-Access-Token header as requested
-    response.headers.set('X-Auth-Request-Access-Token', accessToken);
+  // Fall back to cookies if headers are not available
+  if (!accessToken) {
+    accessToken = request.cookies.get('access_token')?.value;
   }
 
-  // if (refreshToken) {
-  //   response.headers.set('x-refresh-token', refreshToken);
-  // }
+  if (!idToken) {
+    idToken = request.cookies.get('id_token')?.value;
+  }
+
+  // Store access token in request headers for use in server components
+  if (accessToken) {
+    response.headers.set('X-Auth-Request-Access-Token', accessToken);
+  }
 
   // Extract email from ID token if available
   if (idToken) {

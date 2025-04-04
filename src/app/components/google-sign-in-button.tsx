@@ -1,8 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { storeTokens } from "@/utils/token-storage";
 
-const GoogleSignInButton = () => {
+interface GoogleSignInButtonProps {
+  onSignIn?: () => void;
+}
+
+const GoogleSignInButton = ({ onSignIn }: GoogleSignInButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignIn = () => {
@@ -19,7 +24,7 @@ const GoogleSignInButton = () => {
       `width=${width},height=${height},top=${top},left=${left}`,
     );
 
-    window.addEventListener("message", async (event) => {
+    const handleMessage = async (event: MessageEvent) => {
       if (event.origin === process.env.NEXT_PUBLIC_GOOGLE_BASE_URL) {
         const tokens = event.data;
 
@@ -27,24 +32,25 @@ const GoogleSignInButton = () => {
 
         console.log("Received tokens:", tokens);
 
-        // Store tokens in middleware via API
+        // Store tokens in localStorage instead of cookies
         try {
-          const response = await fetch("/api/auth/store-tokens", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ tokens }),
-          });
+          storeTokens(tokens);
+          console.log("Tokens stored in localStorage");
 
-          if (!response.ok) {
-            console.error("Failed to store tokens:", await response.text());
+          // Call the onSignIn callback if provided
+          if (onSignIn) {
+            onSignIn();
           }
         } catch (error) {
           console.error("Error storing tokens:", error);
         }
+
+        // Remove the event listener after handling the message
+        window.removeEventListener("message", handleMessage);
       }
-    });
+    };
+
+    window.addEventListener("message", handleMessage);
 
     if (!popup) {
       alert("Popup blocked! Please disable popup blockers to proceed.");

@@ -6,13 +6,21 @@ import {
   MeetSidePanelClient,
 } from "@googleworkspace/meet-addons/meet.addons";
 import { CLOUD_PROJECT_NUMBER, MAIN_STAGE_URL } from "@/constants";
-import { getSessions } from "./get-sessions";
+import { authenticatedFetch, hasValidTokens, clearTokens } from "@/utils/token-storage";
+import dynamic from "next/dynamic";
+
+// Dynamically import the GoogleSignInButton component with no SSR
+const GoogleSignInButton = dynamic(
+  () => import("@/app/components/google-sign-in-button"),
+  { ssr: false }
+);
 
 export default function ClientPage() {
   const [sidePanelClient, setSidePanelClient] = useState<MeetSidePanelClient>();
   const [sessions, setSessions] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Launches the main stage when the main button is clicked.
   async function startActivity() {
@@ -28,9 +36,31 @@ export default function ClientPage() {
   async function fetchSessions() {
     setIsLoading(true);
     setError(null);
+
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      setError("You need to sign in first.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const data = await getSessions();
-      setSessions(data.sessions);
+      // Use authenticatedFetch to include tokens in the request
+      const response = await authenticatedFetch('/api/sessions');
+
+      if (!response.ok) {
+        // If we get a 401 Unauthorized, the token might be invalid or expired
+        if (response.status === 401) {
+          clearTokens();
+          setIsAuthenticated(false);
+          setError("Your session has expired. Please sign in again.");
+        } else {
+          throw new Error(`Failed to fetch sessions: ${response.statusText}`);
+        }
+      } else {
+        const data = await response.json();
+        setSessions(data.sessions);
+      }
     } catch (err) {
       console.error("Error fetching sessions:", err);
       setError("Failed to fetch sessions. Please try again.");
@@ -52,12 +82,56 @@ export default function ClientPage() {
     })();
   }, []);
 
+  /**
+   * Check authentication status on component mount and when window gains focus
+   */
+  useEffect(() => {
+    // Check initial authentication status
+    setIsAuthenticated(hasValidTokens());
+
+    // Update authentication status when window gains focus
+    const handleFocus = () => {
+      setIsAuthenticated(hasValidTokens());
+    };
+
+    window.addEventListener('focus', handleFocus);
+
+    // Clean up event listener
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, []);
+
   return (
     <div>
       <h1>User Data</h1>
       <button onClick={startActivity}>Launch Activity in Main Stage.</button>
 
       <div style={{ marginTop: "20px" }}>
+        {/* Authentication section */}
+        <div style={{ marginBottom: "20px" }}>
+          {!isAuthenticated ? (
+            <div>
+              <p>You need to sign in to access sessions.</p>
+              <GoogleSignInButton onSignIn={() => setIsAuthenticated(true)} />
+            </div>
+          ) : (
+            <div>
+              <p>You are signed in.</p>
+              <button 
+                onClick={() => {
+                  clearTokens();
+                  setIsAuthenticated(false);
+                  setSessions(null);
+                }}
+                style={{ marginLeft: "10px" }}
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
+        </div>
+
         <button onClick={fetchSessions} disabled={isLoading}>
           {isLoading ? "Loading Sessions..." : "Fetch Sessions"}
         </button>
