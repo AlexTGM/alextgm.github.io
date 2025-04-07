@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error while handling Google callback", error);
     return new Response(
-      JSON.stringify({ error: "Failed to retrieve tokens" }),
+      JSON.stringify({ error: "Failed to retrieve tokens", payload: error }),
       {
         status: 500,
       },
