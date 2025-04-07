@@ -16,5 +16,5 @@ export default function ClientPage() {
     })();
   }, []);
 
-  return <div>Side Activity</div>;
+  return <div>Side Activity!</div>;
 }
