@@ -1,17 +1,18 @@
 import { OAuth2Client } from "google-auth-library";
-
 import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 
+// api/auth/callback
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-  const code = url.searchParams.get("code");
+  const cookieStore = await cookies();
+
+  const redirectUrl = new URL(req.url).searchParams.get("state")!;
+  const code = new URL(req.url).searchParams.get("code");
 
   if (!code) {
     return new Response(
       JSON.stringify({ error: "Missing authorization code" }),
-      {
-        status: 400,
-      },
+      { status: 400 },
     );
   }
 
@@ -22,29 +23,19 @@ export async function GET(req: NextRequest) {
   );
 
   try {
-    // Exchange the code for tokens
     const { tokens } = await oauth2Client.getToken(code);
 
-    // Prepare a script that will send tokens to the opener window
-    const htmlResponse = `
-      <script>
-        // Check if the window has an opener
-        if (window.opener) {
-          // Send the tokens to the opener window
-          window.opener.postMessage(${JSON.stringify(tokens)}, "*");
+    if (tokens.access_token) {
+      cookieStore.set("access_token", tokens.access_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        expires: new Date(tokens.expiry_date ?? ""),
+        path: "/",
+      });
+    }
 
-          // Close the popup window
-          window.close();
-        } else {
-          console.error("No opener window found.");
-        }
-      </script>
-    `;
-
-    return new Response(htmlResponse, {
-      status: 200,
-      headers: { "Content-Type": "text/html" },
-    });
+    return Response.redirect(redirectUrl);
   } catch (error) {
     console.error("Error while handling Google callback", error);
     return new Response(

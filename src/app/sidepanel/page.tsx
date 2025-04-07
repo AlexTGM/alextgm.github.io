@@ -1,33 +1,19 @@
 "use server";
 
-// import { cookies } from "next/headers";
-
 import GoogleSignInButton from "@/app/components/google-sign-in-button";
 import ClientPage from "@/app/sidepanel/client-page";
+import { cookies } from "next/headers";
 
 export default async function Page() {
-  // const cookieStore = await cookies();
-  // const cookie = cookieStore.get("google_jwt");
-  //
-  // if (!cookie?.value) {
-  //   return <div>Unauthorized</div>;
-  // }
-  //
-  // const response = await (
-  //   await fetch(
-  //     "https://services.reops.labs.jb.gg/drive-watch/ext/projects/sessions",
-  //     {
-  //       headers: { "Google-Id-Token": cookie?.value },
-  //     },
-  //   )
-  // ).json();
+  const cookieStore = await cookies();
+
+  const accessToken = cookieStore.get("access_token")?.value;
 
   return (
     <div>
-      {/*<pre>{JSON.stringify(response, null, 2)}</pre>*/}
-      {/*<SignOut />*/}
-      <ClientPage />
+      <pre>access token: {accessToken ?? 'none'}</pre>
 
+      <ClientPage />
       <GoogleSignInButton />
     </div>
   );
