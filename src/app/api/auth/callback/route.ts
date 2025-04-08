@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
       cookieStore.set("access_token", tokens.access_token, {
         httpOnly: true,
         secure: true,
-        sameSite: "none",
+        sameSite: "lax",
         expires: new Date(tokens.expiry_date ?? ""),
         path: "/",
       });
